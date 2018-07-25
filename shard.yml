@@ -1,0 +1,9 @@
+name: git
+version: 0.1.0
+
+authors:
+  - Maxim Sukharev <maxim@sourced.tech>
+
+crystal: 0.25.1
+
+license: MIT
