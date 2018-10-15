@@ -1,9 +1,15 @@
 name: git
 version: 0.1.0
 
+crystal: 0.25.1
+
 authors:
   - Maxim Sukharev <maxim@sourced.tech>
 
-crystal: 0.25.1
+description: |
+  libgit2 bindings for crystal-lang
+
+libraries:
+  libgit2: ~> 0.27
 
 license: MIT
