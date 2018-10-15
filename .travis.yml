@@ -1,7 +1,10 @@
 language: crystal
 
+env: LIBGIT2=~/libgit2/_install/ LD_LIBRARY_PATH=~/libgit2/_install/lib LIBRARY_PATH=~/libgit2/_install/lib
+
 before_install:
-  - sudo apt-get install -y libgit2-dev
+  - sudo apt-get install -y cmake
+  - ./.travis.sh
 
 script:
-  - crystal run examples/log.cr
+  - crystal run examples/log.cr -- .
