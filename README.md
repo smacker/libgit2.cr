@@ -1,6 +1,6 @@
-# git
+# libgit2.cr
 
-TODO: Write a description here
+Crystal-lang binding to [libgit2](https://libgit2.org) with inteface similar to [rugged](https://github.com/libgit2/rugged/).
 
 ## Installation
 
@@ -9,7 +9,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   git:
-    github: your-github-user/git
+    github: smacker/libgit2.cr
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it (<https://github.com/your-github-user/git/fork>)
+1. Fork it (<https://github.com/smacker/libgit2/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -34,4 +34,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [your-github-user](https://github.com/your-github-user) Maxim Sukharev - creator, maintainer
+- [smacker](https://github.com/smacker) Maxim Sukharev - creator, maintainer
