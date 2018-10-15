@@ -1,0 +1,6 @@
+[submodule "spec/rugged"]
+	path = spec/rugged
+	url = https://github.com/libgit2/rugged.git
+[submodule "spec/libgit2"]
+	path = spec/libgit2
+	url = https://github.com/libgit2/libgit2.git

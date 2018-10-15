@@ -7,4 +7,5 @@ before_install:
   - ./.travis.sh
 
 script:
+  - crystal spec
   - crystal run examples/log.cr -- .

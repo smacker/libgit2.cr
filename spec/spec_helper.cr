@@ -4,7 +4,7 @@ require "../src/git"
 
 module FixtureRepo
   TEST_DIR            = __DIR__
-  LIBGIT2_FIXTURE_DIR = File.expand_path("../../vendor/libgit2/tests/resources", __FILE__)
+  LIBGIT2_FIXTURE_DIR = File.join(FixtureRepo::TEST_DIR, "libgit2", "tests", "resources")
 
   # Create a new, empty repository.
   def self.empty(*args)
@@ -18,7 +18,7 @@ module FixtureRepo
     path = mktmpdir("rugged-#{name}")
     ensure_cleanup(path)
 
-    FileUtils.cp_r(File.join(FixtureRepo::TEST_DIR, "fixtures", name, "."), path)
+    FileUtils.cp_r(File.join(FixtureRepo::TEST_DIR, "rugged", "test", "fixtures", name, "."), path)
 
     prepare(path)
 
