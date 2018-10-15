@@ -1,4 +1,7 @@
 language: crystal
 
+before_install:
+  - sudo apt-get install -y libgit2-dev
+
 script:
   - crystal run examples/log.cr
