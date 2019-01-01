@@ -10,7 +10,7 @@ describe Git::Commit do
     it "should return correct main data" do
       obj.sha.should eq oid
       obj.message.should eq "testing\n"
-      obj.time.epoch.should eq 1273360386
+      obj.time.to_unix.should eq 1273360386
       obj.epoch_time.should eq 1273360386
     end
 
@@ -25,7 +25,7 @@ describe Git::Commit do
       c = obj.author
       c.name.should eq "Scott Chacon"
       c.epoch_time.should eq 1273360386
-      c.time.epoch.should eq 1273360386
+      c.time.to_unix.should eq 1273360386
       c.email.should eq "schacon@gmail.com"
     end
 
