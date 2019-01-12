@@ -17,7 +17,7 @@ module Git
     end
 
     def time
-      Time.epoch(epoch_time)
+      Time.unix(epoch_time)
     end
   end
 
@@ -35,7 +35,7 @@ module Git
     end
 
     def time
-      Time.epoch(epoch_time)
+      Time.unix(epoch_time)
     end
 
     def author
