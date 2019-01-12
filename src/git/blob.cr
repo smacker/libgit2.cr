@@ -21,7 +21,7 @@ module Git
       content
     end
 
-    def is_binary
+    def binary?
       LibGit.blob_is_binary(@value) == 1
     end
 
