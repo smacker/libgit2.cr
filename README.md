@@ -107,6 +107,15 @@ TODO: Write usage instructions here
   - [ ] `#rename`
   - [ ] `#update`
 - [ ] Remote
+  - [ ] `check_connection`
+  - [ ] `fetch`
+  - [ ] `fetch_refspecs`
+  - [x] `name`
+  - [ ] `push`
+  - [ ] `push_refspecs`
+  - [x] `push_url`
+  - [ ] `push_url=`
+  - [x] `url`
 - [ ] RemoteCollection
 - [ ] Repository
   - [x] `#open`

@@ -137,6 +137,10 @@ module Git
       TagCollection.new(self, glob)
     end
 
+    def remotes
+      RemoteCollection.new(self)
+    end
+
     def walk(from : String | Oid, sorting : Sort = Sort::Time, &block)
       walk(from, sorting).each { |c| yield c }
     end
