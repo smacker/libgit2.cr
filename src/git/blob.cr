@@ -49,6 +49,28 @@ module Git
       loc
     end
 
+    def sloc
+      data = LibGit.blob_rawcontent(@value).as(Pointer(UInt8))
+      data_end = data + LibGit.blob_rawsize(@value)
+      return 0 if data == data_end
+
+      sloc = 0
+
+      eol = '\n'.ord
+      while data < data_end
+        data += 1
+        if data[0] == eol
+          while data < data_end && is_space(data[0])
+            data += 1
+          end
+          sloc += 1
+        end
+      end
+      sloc += 1 if data[-1] != eol
+
+      sloc
+    end
+
     def finalize
       LibGit.blob_free(@value)
     end
@@ -65,6 +87,10 @@ module Git
     def self.from_buffer(repo : Repo, data : String)
       nerr(LibGit.blob_create_frombuffer(out oid, repo, data, data.size))
       Oid.new(oid)
+    end
+
+    private def is_space(chr : UInt8)
+      chr == 32 || (chr >= 9 && chr <= 13)
     end
   end
 end

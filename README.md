@@ -37,7 +37,7 @@ TODO: Write usage instructions here
   - [x] `#loc`
   - [ ] `#similarity`
   - [x] `#size`
-  - [ ] `#sloc`
+  - [x] `#sloc`
   - [x] `#text`
   - [x] `from_buffer`
 - [ ] Branch

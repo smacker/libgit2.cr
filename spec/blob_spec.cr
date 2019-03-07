@@ -37,7 +37,7 @@ describe Git::Blob do
     blob.text.should eq("new file\n")
   end
 
-  pending "sloc" do
+  it "sloc" do
     blob = Git::Blob.lookup(repo, "7771329dfa3002caf8c61a0ceb62a31d09023f37")
     blob.sloc.should eq(328)
   end
