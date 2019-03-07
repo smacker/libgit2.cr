@@ -34,11 +34,12 @@ TODO: Write usage instructions here
   - [x] `#content`
   - [ ] `#diff`
   - [ ] `#hashsig`
-  - [ ] `#loc`
+  - [x] `#loc`
   - [ ] `#similarity`
   - [x] `#size`
   - [ ] `#sloc`
   - [x] `#text`
+  - [x] `from_buffer`
 - [ ] Branch
   - [ ] `#==`
   - [x] `#name`

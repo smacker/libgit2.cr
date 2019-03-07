@@ -1,5 +1,10 @@
 require "./spec_helper"
 
+def write_blob(repo, data)
+  oid = Git::Blob.from_buffer(repo, data)
+  Git::Blob.lookup(repo, oid)
+end
+
 describe Git::Blob do
   repo = FixtureRepo.from_rugged("testrepo.git")
 
@@ -83,5 +88,47 @@ describe Git::Blob do
     blob = Git::Blob.lookup(repo, "7771329dfa3002caf8c61a0ceb62a31d09023f37")
     text = blob.text(-100)
     text.lines.size.should eq(464)
+  end
+
+  describe "write" do
+    source_repo = FixtureRepo.from_rugged("testrepo.git")
+    write_repo = FixtureRepo.clone(source_repo)
+
+    it "blob data" do
+      oid = Git::Blob.from_buffer(write_repo, "a new blob content")
+      oid.to_s.should eq("1d83f106355e4309a293e42ad2a2c4b8bdbe77ae")
+    end
+  end
+
+  describe "loc" do
+    it "end with nl" do
+      blob = write_blob(repo, "hello\nworld\nwhat\n")
+      blob.loc.should eq(3)
+    end
+
+    it "with no end nl" do
+      blob = write_blob(repo, "hello\nworld\nwhat")
+      blob.loc.should eq(3)
+    end
+
+    it "carriages" do
+      blob = write_blob(repo, "hello\r\nworld\r\nwhat\r\n")
+      blob.loc.should eq(3)
+    end
+
+    it "carriages with no end nl" do
+      blob = write_blob(repo, "hello\r\nworld\r\nwhat")
+      blob.loc.should eq(3)
+    end
+
+    it "mixed" do
+      blob = write_blob(repo, "hello\nworld\rwhat\r")
+      blob.loc.should eq(3)
+    end
+
+    it "mixed with no end nl" do
+      blob = write_blob(repo, "hello\nworld\rwhat")
+      blob.loc.should eq(3)
+    end
   end
 end
