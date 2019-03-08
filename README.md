@@ -43,14 +43,14 @@ TODO: Write usage instructions here
 - [ ] Branch
   - [ ] `#==`
   - [x] `#name`
-  - [ ] `#head?`
+  - [x] `#head?`
   - [ ] `#remote`
   - [ ] `#remote_name`
   - [ ] `#upstream`
   - [ ] `#upstream=`
 - [ ] BranchCollection
   - [x] `#[]`
-  - [ ] `#create`
+  - [x] `#create`
   - [ ] `#delete`
   - [x] `#each`
   - [x] `#each_name`

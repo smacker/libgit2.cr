@@ -13,17 +13,20 @@ describe Git::Branch do
     ])
   end
 
-  pending "lookup with ambiguous names" do
-    repo.branches["origin/master"].target_id.should eq("41bc8c69075bbdb46c5c6f0566cc8cc5b46e8bd9")
-    repo.branches["heads/origin/master"].target_id.should eq("41bc8c69075bbdb46c5c6f0566cc8cc5b46e8bd9")
-    repo.branches["remotes/origin/master"].target_id.should eq("36060c58702ed4c2a40832c51758d5344201d89a")
-
-    repo.branches["refs/heads/origin/master"].target_id.should eq("41bc8c69075bbdb46c5c6f0566cc8cc5b46e8bd9")
-    repo.branches["refs/remotes/origin/master"].target_id.should eq("36060c58702ed4c2a40832c51758d5344201d89a")
-  end
-
   it "list only local branches" do
     repo.branches.each_name(Git::BranchType::Local).to_a.sort.should eq(["master"])
+  end
+
+  it "lookup with ambiguous names" do
+    commit = repo.lookup_commit("41bc8c69075bbdb46c5c6f0566cc8cc5b46e8bd9")
+    repo.branches.create("origin/master", commit)
+
+    repo.branches["origin/master"].target_id.to_s.should eq("41bc8c69075bbdb46c5c6f0566cc8cc5b46e8bd9")
+    repo.branches["heads/origin/master"].target_id.to_s.should eq("41bc8c69075bbdb46c5c6f0566cc8cc5b46e8bd9")
+    repo.branches["remotes/origin/master"].target_id.to_s.should eq("36060c58702ed4c2a40832c51758d5344201d89a")
+
+    repo.branches["refs/heads/origin/master"].target_id.to_s.should eq("41bc8c69075bbdb46c5c6f0566cc8cc5b46e8bd9")
+    repo.branches["refs/remotes/origin/master"].target_id.to_s.should eq("36060c58702ed4c2a40832c51758d5344201d89a")
   end
 
   it "list only remote branches" do
@@ -32,5 +35,12 @@ describe Git::Branch do
       "origin/master",
       "origin/packed",
     ])
+  end
+
+  it "is_head" do
+    repo.branches["master"].head?.should be_true
+    repo.branches["origin/master"].head?.should be_false
+    repo.branches["origin/packed"].head?.should be_false
+    # repo.create_branch("test_branch").head?.should be_false
   end
 end

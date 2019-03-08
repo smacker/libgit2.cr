@@ -8,6 +8,10 @@ module Git
       nerr(LibGit.branch_name(out b_name, @value))
       String.new(b_name)
     end
+
+    def head?
+      LibGit.branch_is_head(@value) == 1
+    end
   end
 
   class BranchCollection < NoError
@@ -17,8 +21,9 @@ module Git
     end
 
     def [](name)
-      nerr(LibGit.reference_lookup(out ref, @repo, name))
-      Branch.new(ref)
+      err, branch = ref_from_name(name)
+      nerr(err)
+      Branch.new(branch.not_nil!)
     end
 
     def each(b_type : BranchType = BranchType::All)
@@ -27,6 +32,33 @@ module Git
 
     def each_name(b_type : BranchType = BranchType::All)
       each(b_type).map(&.name)
+    end
+
+    def create(name : String, target : Commit, force : Bool = false)
+      nerr(LibGit.branch_create(out ref, @repo, name, target, force))
+      Branch.new(ref)
+    end
+
+    private def ref_from_name(name)
+      branch = uninitialized LibGit::Reference
+
+      if name.starts_with?("refs/heads/") || name.starts_with?("refs/remotes/")
+        err = LibGit.reference_lookup(pointerof(branch), @repo, name)
+        return err, branch
+      end
+
+      err = LibGit.branch_lookup(pointerof(branch), @repo, name, BranchType::Local)
+      if err == 0 && err != LibGit::ErrorCode::Enotfound.value
+        return err, branch
+      end
+
+      err = LibGit.branch_lookup(pointerof(branch), @repo, name, BranchType::Remote)
+      if err == 0 && err != LibGit::ErrorCode::Enotfound.value
+        return err, branch
+      end
+
+      err = LibGit.reference_lookup(pointerof(branch), @repo, "refs/" + name)
+      return err, branch
     end
 
     private class BranchIterator < NoError

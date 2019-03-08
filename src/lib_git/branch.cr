@@ -9,7 +9,7 @@ lib LibGit
   end
 
   fun branch_iterator_new = git_branch_iterator_new(out : BranchIterator*, repo : Repository, list_flags : BranchT) : LibC::Int
-
+  fun branch_create = git_branch_create(out : Reference*, repo : Repository, branch_name : LibC::Char*, target : Commit, force : LibC::Int) : LibC::Int
   fun branch_next = git_branch_next(out : Reference*, out_type : BranchT*, iter : BranchIterator) : LibC::Int
   fun branch_iterator_free = git_branch_iterator_free(iter : BranchIterator)
   fun branch_move = git_branch_move(out : Reference*, branch : Reference, new_branch_name : LibC::Char*, force : LibC::Int) : LibC::Int
