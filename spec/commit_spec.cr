@@ -134,5 +134,22 @@ describe Git::Commit do
         Git::Signature.new(name = "Scott", email = "", time = Time.now)
       end
     end
+
+    it "to string" do
+      parent = write_repo.head.target.as(Git::Commit)
+      person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+      data = Git::CommitData.new(
+        message = msg,
+        parents = [parent],
+        tree,
+        committer = person,
+        author = person
+      )
+      oid = Git::Commit.create(write_repo, data)
+      buffer = Git::Commit.create_to_s(write_repo, data)
+
+      commit = write_repo.lookup_commit(oid)
+      buffer.should eq(commit.read_raw.data)
+    end
   end
 end

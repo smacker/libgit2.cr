@@ -152,5 +152,21 @@ module Git
 
       Oid.new(oid)
     end
+
+    def self.create_to_s(repo : Repo, data : CommitData)
+      author = data.author.nil? ? Signature.new : data.author.as(Signature)
+      committer = data.committer.nil? ? Signature.new : data.committer.as(Signature)
+      parents = data.parents.map(&.to_unsafe)
+
+      if data.update_ref != ""
+        raise "can't use update_ref in create_s"
+      end
+
+      buf = LibGit::Buf.new
+      nerr(LibGit.commit_create_buffer(pointerof(buf), repo, author, committer, nil,
+        data.message, data.tree, data.parent_count, parents))
+
+      String.new(buf.ptr)
+    end
   end
 end

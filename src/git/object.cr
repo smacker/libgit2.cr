@@ -10,6 +10,18 @@ module Git
       LibGit.object_type(@value.as(LibGit::Object))
     end
 
+    def read_raw
+      repo = LibGit.object_owner(@value.as(LibGit::Object))
+      oid = LibGit.object_id(@value.as(LibGit::Object))
+
+      nerr(LibGit.repository_odb(out odb, repo))
+      err = LibGit.odb_read(out obj, odb, oid)
+      LibGit.odb_free(odb)
+      nerr(err)
+
+      OdbObject.new(obj)
+    end
+
     def self.lookup(repo : Repo, sha : String)
       if sha.size > LibGit::OID_HEXSZ
         raise "The given sha is too long"

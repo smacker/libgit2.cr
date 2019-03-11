@@ -83,6 +83,21 @@ TODO: Write usage instructions here
 - [ ] Credentials
 - Diff (TODO: check what is implemented, something works)
 - [ ] Index
+- [ ] Object
+  - [x] `.lookup`
+  - [ ] `.rev_parse`
+  - [ ] `.rev_parse_oid`
+  - [ ] `#create_note`
+  - [ ] `#notes`
+  - [x] `#oid`
+  - [x] `#read_raw`
+  - [ ] `#remove_note`
+  - [x] `#type`
+- [ ] OdbObjet
+  - [x] `#data`
+  - [ ] `#size`
+  - [x] `#oid`
+  - [ ] `#type`
 - [ ] Patch
 - [ ] Rebase
 - [ ] Reference
