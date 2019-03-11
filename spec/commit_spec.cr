@@ -74,4 +74,65 @@ describe Git::Commit do
 
     obj.tree_oid.should eq("181037049a54a1eb5fab404658a3a250b44335d7")
   end
+
+  describe "write commit data" do
+    source_repo = FixtureRepo.from_rugged("testrepo.git")
+    write_repo = FixtureRepo.clone(source_repo)
+    # repo.config['core.abbrev'] = 7
+
+    msg = "This is the commit message\n\nThis commit is created from Rugged"
+    tree = write_repo.lookup_tree("c4dc1555e4d4fa0e0c9c3fc46734c7c35b3ce90b")
+
+    it "with time" do
+      parent = write_repo.head.target.as(Git::Commit)
+      person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+      data = Git::CommitData.new(
+        message = msg,
+        parents = [parent],
+        tree,
+        committer = person,
+        author = person,
+      )
+      oid = Git::Commit.create(write_repo, data)
+
+      commit = write_repo.lookup_commit(oid)
+      commit.message.should eq(msg)
+      commit.parent_count.should eq(1)
+      commit.parent.should eq(parent)
+      commit.time.should eq(person.time)
+      commit.tree.should eq(tree)
+      commit.author.name.should eq(person.name)
+      commit.author.email.should eq(person.email)
+      commit.committer.name.should eq(person.name)
+      commit.committer.email.should eq(person.email)
+    end
+
+    pending "with time offset" do
+    end
+
+    it "without time" do
+      parent = write_repo.head.target.as(Git::Commit)
+      person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com")
+      data = Git::CommitData.new(
+        message = msg,
+        parents = [parent],
+        tree,
+        committer = person,
+        author = person,
+      )
+      oid = Git::Commit.create(write_repo, data)
+
+      commit = write_repo.lookup_commit(oid)
+      commit.committer.time.should be_close(Time.now, 1.seconds)
+    end
+
+    pending "without signature" do
+    end
+
+    it "empty email fails" do
+      expect_raises(Git::Error) do
+        Git::Signature.new(name = "Scott", email = "", time = Time.now)
+      end
+    end
+  end
 end

@@ -1,23 +1,65 @@
 require "./object"
 
 module Git
-  class Signature < C_Value
-    @value : LibGit::Signature
+  class Signature < C_Pointer
+    @value : Pointer(LibGit::Signature)
+    @need_free = false
+
+    protected def initialize
+      @value = uninitialized LibGit::Signature
+    end
+
+    protected def initialize(@value)
+    end
+
+    def initialize(name : String, email : String, time : Time)
+      @need_free = true
+      nerr(LibGit.signature_new(out @value, name, email, time.to_unix, 0))
+    end
+
+    def initialize(name : String, email : String)
+      @need_free = true
+      nerr(LibGit.signature_now(out @value, name, email))
+    end
 
     def name
-      String.new(@value.name)
+      String.new(@value.value.name)
     end
 
     def email
-      String.new(@value.email)
+      String.new(@value.value.email)
     end
 
     def epoch_time
-      @value.when.time
+      @value.value.when.time
     end
 
     def time
       Time.unix(epoch_time)
+    end
+
+    def finalize
+      if @need_free
+        LibGit.signature_free(@value)
+      end
+    end
+  end
+
+  class CommitData
+    getter message : String
+    getter parents : Array(Commit)
+    getter tree : Tree
+    getter committer : Signature | Nil
+    getter author : Signature | Nil
+    getter update_ref : String
+
+    def initialize(@message : String, @parents : Array(Commit), @tree : Tree,
+                   @committer : Signature, @author : Signature | Nil,
+                   @update_ref : String = "")
+    end
+
+    def parent_count
+      @parents.size
     end
   end
 
@@ -39,11 +81,11 @@ module Git
     end
 
     def author
-      Signature.new(LibGit.commit_author(@value).value)
+      Signature.new(LibGit.commit_author(@value))
     end
 
     def committer
-      Signature.new(LibGit.commit_committer(@value).value)
+      Signature.new(LibGit.commit_committer(@value))
     end
 
     def message
@@ -92,6 +134,23 @@ module Git
         nerr(LibGit.commit_lookup_prefix(out commit, repo, Git::Oid.new(sha).p, sha.size))
         Commit.new(commit)
       end
+    end
+
+    def self.create(repo : Repo, data : CommitData)
+      author = data.author.nil? ? Signature.new : data.author.as(Signature)
+      committer = data.committer.nil? ? Signature.new : data.committer.as(Signature)
+      parents = data.parents.map(&.to_unsafe)
+
+      oid = uninitialized LibGit::Oid
+      if data.update_ref != ""
+        nerr(LibGit.commit_create(pointerof(oid), repo, data.update_ref, author,
+          committer, nil, data.message, data.tree, data.parent_count, parents))
+      else
+        nerr(LibGit.commit_create(pointerof(oid), repo, nil, author,
+          committer, nil, data.message, data.tree, data.parent_count, parents))
+      end
+
+      Oid.new(oid)
     end
   end
 end

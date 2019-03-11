@@ -26,7 +26,7 @@ module Git
     end
 
     def tagger
-      Signature.new(LibGit.tag_tagger(@value).value)
+      Signature.new(LibGit.tag_tagger(@value))
     end
 
     def finalize

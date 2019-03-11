@@ -27,6 +27,8 @@ lib LibGit
     when : Time
   end
 
+  fun signature_new = git_signature_new(out : Signature**, name : LibC::Char*, email : LibC::Char*, time : TimeT, offset : LibC::Int) : LibC::Int
+  fun signature_now = git_signature_now(out : Signature**, name : LibC::Char*, email : LibC::Char*) : LibC::Int
   fun signature_free = git_signature_free(sig : Signature*)
 
   enum SubmoduleIgnoreT
