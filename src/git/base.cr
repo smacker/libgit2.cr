@@ -26,6 +26,10 @@ module Git
     protected def initialize(@value)
     end
 
+    def ==(other : self)
+      @value == other.to_unsafe
+    end
+
     def to_unsafe
       @value
     end
