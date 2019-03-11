@@ -43,7 +43,7 @@ module Git
 
     def []?(name)
       err = LibGit.remote_lookup(out remote, @repo, name)
-      if err == LibGit::ErrorCode::Enotfound.value
+      if err == LibGit::ErrorCode::NotFound.value
         nil
       else
         nerr(err)

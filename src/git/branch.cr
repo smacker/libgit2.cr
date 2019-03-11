@@ -48,12 +48,12 @@ module Git
       end
 
       err = LibGit.branch_lookup(pointerof(branch), @repo, name, BranchType::Local)
-      if err == 0 && err != LibGit::ErrorCode::Enotfound.value
+      if err == 0 && err != LibGit::ErrorCode::NotFound.value
         return err, branch
       end
 
       err = LibGit.branch_lookup(pointerof(branch), @repo, name, BranchType::Remote)
-      if err == 0 && err != LibGit::ErrorCode::Enotfound.value
+      if err == 0 && err != LibGit::ErrorCode::NotFound.value
         return err, branch
       end
 

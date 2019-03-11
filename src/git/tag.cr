@@ -57,7 +57,7 @@ module Git
 
     def fetch(name)
       err = LibGit.reference_lookup(out tag, @repo, name)
-      if err == LibGit::ErrorCode::Enotfound.value || err == LibGit::ErrorCode::Einvalidspec.value
+      if err == LibGit::ErrorCode::NotFound.value || err == LibGit::ErrorCode::InvalidSpec.value
         canonical_ref = "refs/tags/#{name}"
         nerr(LibGit.reference_lookup(out ref, @repo, canonical_ref))
         Tag.new(ref.as(LibGit::Tag))

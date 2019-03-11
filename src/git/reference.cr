@@ -36,7 +36,7 @@ module Git
 
     def peel
       err = LibGit.reference_peel(out obj, @value, OType::ANY)
-      if err == LibGit::ErrorCode::Enotfound.value
+      if err == LibGit::ErrorCode::NotFound.value
         nil
       else
         nerr(err)
@@ -91,7 +91,7 @@ module Git
 
     def []?(name)
       err = LibGit.reference_lookup(out ref, @repo, name)
-      if err == LibGit::ErrorCode::Enotfound.value
+      if err == LibGit::ErrorCode::NotFound.value
         nil
       else
         nerr(err)
@@ -121,7 +121,7 @@ module Git
 
     def exists?(name)
       err = LibGit.reference_lookup(out ref, @repo, name)
-      if err == LibGit::ErrorCode::Enotfound.value
+      if err == LibGit::ErrorCode::NotFound.value
         false
       else
         nerr(err)

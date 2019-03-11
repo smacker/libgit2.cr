@@ -1,24 +1,76 @@
 module Git
+  enum ErrorClass
+    NONE       = 0
+    NOMEMORY
+    OS
+    INVALID
+    REFERENCE
+    ZLIB
+    REPOSITORY
+    CONFIG
+    REGEX
+    ODB
+    INDEX
+    OBJECT
+    NET
+    TAG
+    TREE
+    INDEXER
+    SSL
+    SUBMODULE
+    THREAD
+    STASH
+    CHECKOUT
+    FETCHHEAD
+    MERGE
+    SSH
+    FILTER
+    REVERT
+    CALLBACK
+    CHERRYPICK
+    DESCRIBE
+    REBASE
+    FILESYSTEM
+    PATCH
+    WORKTREE
+    SHA1
+  end
+
   class Error < Exception
-    def initialize(@class : Int32, @message)
+    def initialize(code : Int, klass : Int32, message)
+      @code = LibGit::ErrorCode.from_value(code)
+      @message = @code.to_s + ": " + message
+    end
+  end
+
+  class NotFoundError < Error
+    def initialize(klass : Int32, message)
+      @code = LibGit::ErrorCode::NotFound
+      @message = @code.to_s + ": " + message
     end
   end
 
   private abstract class NoError
     private def self.nerr(code : Int, msg = "git error")
-      # FIXME possible to figure out git error message
-      if code != 0
-        e = LibGit.err_last
-        raise Error.new(e.klass, msg)
+      if code == 0
+        return
       end
+
+      # FIXME possible to figure out why err_last returns garbage
+      e = LibGit.err_last
+      raise NotFoundError.new(e.klass, msg) if code == LibGit::ErrorCode::NotFound
+      raise Error.new(code, e.klass, msg)
     end
 
     private def nerr(code : Int, msg = "git error")
-      # FIXME possible to figure out git error message
-      if code != 0
-        e = LibGit.err_last
-        raise Error.new(e.klass, msg)
+      if code == 0
+        return
       end
+
+      # FIXME possible to figure out why err_last returns garbage
+      e = LibGit.err_last
+      raise NotFoundError.new(e.klass, msg) if code == LibGit::ErrorCode::NotFound
+      raise Error.new(code, e.klass, msg)
     end
   end
 
