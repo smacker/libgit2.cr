@@ -2,6 +2,7 @@ require "./object"
 
 module Git
   alias TreewalkMode = LibGit::TreewalkMode
+  alias Filemode = LibGit::FilemodeT
 
   class TreeEntry < C_Pointer
     @value : LibGit::TreeEntry
@@ -136,6 +137,36 @@ module Git
 
     def finalize
       LibGit.tree_free(@value)
+    end
+  end
+
+  class TreeBuilder < C_Pointer
+    @value : LibGit::TreeBuilder
+
+    protected def initialize(@value)
+    end
+
+    def initialize(repo, tree : Tree | Nil = nil)
+      nerr(LibGit.treebuilder_new(out bld, repo, tree))
+      @value = bld
+    end
+
+    def insert(filename : String, id : Oid, filemode : Filemode)
+      nerr(LibGit.treebuilder_insert(out entry, @value, filename, id.p, filemode))
+      TreeEntry.new(entry)
+    end
+
+    def insert(filename : String, id : String, filemode : Filemode)
+      insert(filename, Oid.new(id), filemode)
+    end
+
+    def write
+      nerr(LibGit.treebuilder_write(out id, @value))
+      Oid.new(id)
+    end
+
+    def finalize
+      LibGit.treebuilder_free(@value)
     end
   end
 end
