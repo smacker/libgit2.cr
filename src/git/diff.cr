@@ -23,7 +23,7 @@ module Git
       new(diff)
     end
 
-    def find_similar
+    def find_similar!
       opts = uninitialized LibGit::DiffFindOptions
       LibGit.diff_find_init_options(pointerof(opts), LibGit::DIFF_FIND_OPTIONS_VERSION)
       # FIXME

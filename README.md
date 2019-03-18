@@ -81,7 +81,63 @@ TODO: Write usage instructions here
   - [ ] `#tree_id`
 - [ ] Config
 - [ ] Credentials
-- Diff (TODO: check what is implemented, something works)
+- [ ] Diff
+  - [ ] Delta
+    - [ ] `#binary`
+    - [x] `#old_file`
+    - [x] `#new_file`
+    - [ ] `#owner`
+    - [ ] `#similarity`
+    - [x] `#status`
+    - [ ] `#status_char`
+    - [x] `#added?`
+    - [ ] `#copied?`
+    - [x] `#deleted?`
+    - [ ] `#ignored?`
+    - [x] `#modified?`
+    - [ ] `#renamed?`
+    - [ ] `#typechange?`
+    - [ ] `#untracked?`
+  - [ ] Hunk
+    - [ ] `#header`
+    - [ ] `#hunk_index`
+    - [ ] `#line_count`
+    - [x] `#new_lines`
+    - [x] `#new_start`
+    - [x] `#old_lines`
+    - [x] `#old_start`
+    - [ ] `#delta`
+    - [ ] `#each`
+    - [ ] `#each_line`
+    - [x] `#lines`
+  - [ ] Line
+    - [x] `#content`
+    - [x] `#content_offset`
+    - [ ] `#line_origin`
+    - [x] `#new_lineno`
+    - [x] `#old_lineno`
+    - [x] `#addition?`
+    - [ ] `#binary?`
+    - [x] `#context?`
+    - [x] `#deletion?`
+    - [ ] `#eof_newline_added?`
+    - [ ] `#eof_newline_removed?`
+    - [ ] `#eof_no_newline?`
+    - [ ] `#file_header?`
+    - [ ] `#hunk_header?`
+  - [ ] `#owner`
+  - [x] `#deltas`
+  - [x] `#each_delta`
+  - [ ] `#each_line`
+  - [x] `#each_patch`
+  - [x] `#find_similar!`
+  - [ ] `#merge!`
+  - [ ] `#patch`
+  - [x] `#patches`
+  - [x] `#size`
+  - [ ] `#sorted_icase?`
+  - [ ] `#stat`
+  - [ ] `#write_patch`
 - [ ] Index
 - [ ] Object
   - [x] `.lookup`
