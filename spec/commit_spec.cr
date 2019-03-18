@@ -75,6 +75,93 @@ describe Git::Commit do
     obj.tree_oid.should eq("181037049a54a1eb5fab404658a3a250b44335d7")
   end
 
+  it "amend" do
+    obj = repo.lookup_commit("8496071c1b46c854b31185ea97743be6a8774479")
+
+    builder = Git::TreeBuilder.new(repo)
+    builder.insert("README.txt", "1385f264afb75a56a5bec74243be9b367ba4ca08", Git::Filemode::FilemodeBlob)
+    tree_oid = builder.write
+    tree = repo.lookup_tree(tree_oid)
+
+    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+
+    commit_params = Git::AmendData.new(
+      message: "This is the amended commit message\n\nThis commit is created from Rugged",
+      committer: person,
+      author: person,
+      tree: tree,
+    )
+
+    new_commit_oid = obj.amend(commit_params)
+
+    amended_commit = repo.lookup_commit(new_commit_oid)
+    amended_commit.message.should eq(commit_params.message)
+    amended_commit.tree.oid.should eq(tree_oid)
+    amended_commit.committer.name.should eq(person.name)
+    amended_commit.committer.email.should eq(person.email)
+    amended_commit.author.name.should eq(person.name)
+    amended_commit.author.email.should eq(person.email)
+  end
+
+  it "amend blank tree" do
+    obj = repo.lookup_commit("8496071c1b46c854b31185ea97743be6a8774479")
+
+    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+    commit_params = Git::AmendData.new(
+      message: "This is the amended commit message\n\nThis commit is created from Rugged",
+      committer: person,
+      author: person,
+    )
+
+    new_commit_oid = obj.amend(commit_params)
+
+    amended_commit = repo.lookup_commit(new_commit_oid)
+    amended_commit.message.should eq(commit_params.message)
+    amended_commit.tree.oid.should eq(obj.tree.oid)
+    amended_commit.committer.name.should eq(person.name)
+    amended_commit.committer.email.should eq(person.email)
+    amended_commit.author.name.should eq(person.name)
+    amended_commit.author.email.should eq(person.email)
+  end
+
+  it "amend blank author and committer" do
+    obj = repo.lookup_commit("8496071c1b46c854b31185ea97743be6a8774479")
+
+    commit_params = Git::AmendData.new(
+      message: "This is the amended commit message\n\nThis commit is created from Rugged",
+    )
+
+    new_commit_oid = obj.amend(commit_params)
+
+    amended_commit = repo.lookup_commit(new_commit_oid)
+    amended_commit.message.should eq(commit_params.message)
+    amended_commit.tree.oid.should eq(obj.tree.oid)
+    amended_commit.committer.name.should eq(obj.committer.name)
+    amended_commit.committer.email.should eq(obj.committer.email)
+    amended_commit.author.name.should eq(obj.committer.name)
+    amended_commit.author.email.should eq(obj.author.email)
+  end
+
+  it "amend blank amessage" do
+    obj = repo.lookup_commit("8496071c1b46c854b31185ea97743be6a8774479")
+
+    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+    commit_params = Git::AmendData.new(
+      committer: person,
+      author: person,
+    )
+
+    new_commit_oid = obj.amend(commit_params)
+
+    amended_commit = repo.lookup_commit(new_commit_oid)
+    amended_commit.message.should eq(obj.message)
+    amended_commit.tree.oid.should eq(obj.tree.oid)
+    amended_commit.committer.name.should eq(person.name)
+    amended_commit.committer.email.should eq(person.email)
+    amended_commit.author.name.should eq(person.name)
+    amended_commit.author.email.should eq(person.email)
+  end
+
   describe "write commit data" do
     source_repo = FixtureRepo.from_rugged("testrepo.git")
     write_repo = FixtureRepo.clone(source_repo)

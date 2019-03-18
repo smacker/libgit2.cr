@@ -51,11 +51,11 @@ module Git
     getter tree : Tree
     getter committer : Signature | Nil
     getter author : Signature | Nil
-    getter update_ref : String
+    getter update_ref : String | Nil
 
     def initialize(@message : String, @parents : Array(Commit), @tree : Tree,
-                   @committer : Signature, @author : Signature | Nil,
-                   @update_ref : String = "")
+                   @committer : Signature | Nil, @author : Signature | Nil,
+                   @update_ref : String | Nil = nil)
     end
 
     def parent_count
@@ -63,8 +63,52 @@ module Git
     end
   end
 
+  class AmendData
+    getter message : String | Nil
+    getter tree : Tree | Nil
+    getter committer : Signature | Nil
+    getter author : Signature | Nil
+    getter update_ref : String | Nil
+
+    def initialize(@message : String | Nil = nil, @tree : Tree | Nil = nil,
+                   @committer : Signature | Nil = nil, @author : Signature | Nil = nil,
+                   @update_ref : String | Nil = nil)
+    end
+  end
+
   class Commit < Object
     @value : LibGit::Commit
+
+    def amend(data : AmendData)
+      update_ref = nil.as(Pointer(UInt8))
+      if !(v = data.update_ref).nil?
+        update_ref = v.to_unsafe
+      end
+
+      author = nil.as(LibGit::Signature*)
+      if !(v = data.author).nil?
+        author = v.to_unsafe
+      end
+
+      committer = nil.as(LibGit::Signature*)
+      if !(v = data.committer).nil?
+        committer = v.to_unsafe
+      end
+
+      message = nil.as(Pointer(UInt8))
+      if !(v = data.message).nil?
+        message = v.to_unsafe
+      end
+
+      tree = nil.as(LibGit::Tree)
+      if !(v = data.tree).nil?
+        tree = v.to_unsafe
+      end
+
+      nerr(LibGit.commit_amend(out oid, @value, update_ref, author, committer, nil, message, tree))
+
+      Oid.new(oid)
+    end
 
     def sha
       oid = LibGit.commit_id(@value)
@@ -141,14 +185,13 @@ module Git
       committer = data.committer.nil? ? Signature.new : data.committer.as(Signature)
       parents = data.parents.map(&.to_unsafe)
 
-      oid = uninitialized LibGit::Oid
-      if data.update_ref != ""
-        nerr(LibGit.commit_create(pointerof(oid), repo, data.update_ref, author,
-          committer, nil, data.message, data.tree, data.parent_count, parents))
-      else
-        nerr(LibGit.commit_create(pointerof(oid), repo, nil, author,
-          committer, nil, data.message, data.tree, data.parent_count, parents))
+      update_ref = nil.as(Pointer(UInt8))
+      if !(v = data.update_ref).nil?
+        update_ref = v.to_unsafe
       end
+
+      nerr(LibGit.commit_create(out oid, repo, update_ref, author,
+        committer, nil, data.message, data.tree, data.parent_count, parents))
 
       Oid.new(oid)
     end
@@ -158,7 +201,7 @@ module Git
       committer = data.committer.nil? ? Signature.new : data.committer.as(Signature)
       parents = data.parents.map(&.to_unsafe)
 
-      if data.update_ref != ""
+      if !data.update_ref.nil?
         raise "can't use update_ref in create_s"
       end
 

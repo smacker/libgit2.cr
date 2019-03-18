@@ -58,7 +58,7 @@ TODO: Write usage instructions here
   - [ ] `#rename`
 - [ ] Commit
   - [x] `.create`
-  - [ ] `#amend`
+  - [x] `#amend`
   - [x] `#author`
   - [x] `#commiter`
   - [ ] `#diff`
