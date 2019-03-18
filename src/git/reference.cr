@@ -1,15 +1,61 @@
 module Git
   alias RefType = LibGit::RefT
 
+  class RefLogEntry
+    getter id_old, id_new, committer, message
+
+    def initialize(@id_old : Oid, @id_new : Oid, @committer : Signature, @message : String | Nil)
+    end
+  end
+
+  class RefLog < Array(RefLogEntry)
+    @reflog : LibGit::Reflog
+
+    def initialize(@reflog : LibGit::Reflog)
+      super()
+
+      ref_count = LibGit.reflog_entrycount(@reflog)
+
+      i = 0
+      while i < ref_count
+        entry = LibGit.reflog_entry_byindex(reflog, ref_count - i - 1)
+        self.push(reflog_entry_new(entry))
+        i += 1
+      end
+    end
+
+    private def reflog_entry_new(entry)
+      m = LibGit.reflog_entry_message(entry)
+
+      RefLogEntry.new(Oid.new(LibGit.reflog_entry_id_old(entry).value),
+        Oid.new(LibGit.reflog_entry_id_new(entry).value),
+        Signature.new(LibGit.reflog_entry_committer(entry)),
+        m.null? ? nil : String.new(m))
+    end
+
+    def finalize
+      LibGit.reflog_free(@reflog)
+    end
+  end
+
   class Reference < C_Pointer
     @value : LibGit::Reference
 
     def name
-      String.new(LibGit.reference_name(@value))
+      canonical_name
     end
 
     def canonical_name
-      name
+      String.new(LibGit.reference_name(@value))
+    end
+
+    def log
+      nerr(LibGit.reflog_read(out reflog, LibGit.reference_owner(@value), LibGit.reference_name(@value)))
+      RefLog.new(reflog)
+    end
+
+    def log?
+      LibGit.reference_has_log(LibGit.reference_owner(@value), LibGit.reference_name(@value)) == 1
     end
 
     def type
@@ -126,6 +172,22 @@ module Git
       else
         nerr(err)
         true
+      end
+    end
+
+    def create(name : String, oid : Oid, force = false)
+      log_message = nil
+      nerr(LibGit.reference_create(out ref, @repo, name, oid.p, force, log_message))
+      Reference.new(ref)
+    end
+
+    def create(name : String, target : String, force = false)
+      if LibGit.oid_fromstr(out oid, target) == 0
+        create(name, Oid.new(oid), force)
+      else
+        log_message = nil
+        nerr(LibGit.reference_symbolic_create(out ref, @repo, name, target, force, log_message))
+        Reference.new(ref)
       end
     end
 

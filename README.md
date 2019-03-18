@@ -157,11 +157,12 @@ TODO: Write usage instructions here
 - [ ] Patch
 - [ ] Rebase
 - [ ] Reference
-  - [x] `#branch`
-  - [ ] `#canonical_name`
+  - [x] `.valid_name?`
+  - [x] `#branch?`
+  - [x] `#canonical_name`
   - [ ] `#inspect`
-  - [ ] `#log`
-  - [ ] `#log?`
+  - [x] `#log`
+  - [x] `#log?`
   - [x] `#name`
   - [x] `#peel`
   - [x] `#remote?`
@@ -172,7 +173,7 @@ TODO: Write usage instructions here
   - [x] `#type`
 - [ ] ReferenceCollection
   - [x] `#[]`
-  - [ ] `#create`
+  - [x] `#create`
   - [ ] `#delete`
   - [x] `#each`
   - [x] `#each_name`

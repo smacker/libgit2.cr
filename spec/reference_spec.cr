@@ -133,4 +133,69 @@ describe Git::Reference do
     repo.references["refs/heads/master"].tag?.should be_false
     repo.references["refs/remotes/test/master"].tag?.should be_false
   end
+
+  describe "write" do
+    it "create force" do
+      repo = FixtureRepo.from_rugged("testrepo.git")
+      master = repo.references["refs/heads/master"].target_id.as(Git::Oid)
+
+      ref = repo.references.create("refs/heads/unit_test", master)
+      ref.name.should eq("refs/heads/unit_test")
+      expect_raises(Git::Error) do
+        repo.references.create("refs/heads/unit_test", master)
+      end
+      ref = repo.references.create("refs/heads/unit_test", master, true)
+      ref.name.should eq("refs/heads/unit_test")
+    end
+
+    it "create symbolic ref" do
+      repo = FixtureRepo.from_rugged("testrepo.git")
+
+      ref = repo.references.create("refs/heads/unit_test", "refs/heads/master")
+      ref.type.should eq(Git::RefType::Symbolic)
+      ref.target_id.should eq("refs/heads/master")
+      ref.name.should eq("refs/heads/unit_test")
+    end
+
+    it "create oid ref" do
+      repo = FixtureRepo.from_rugged("testrepo.git")
+      id = "36060c58702ed4c2a40832c51758d5344201d89a"
+      oid = Git::Oid.new(id)
+
+      ref = repo.references.create("refs/heads/unit_test", oid)
+      ref.type.should eq(Git::RefType::Oid)
+      ref.target_id.should eq(oid)
+      ref.name.should eq("refs/heads/unit_test")
+
+      ref = repo.references.create("refs/heads/unit_test", id, true)
+      ref.type.should eq(Git::RefType::Oid)
+      ref.target_id.should eq(oid)
+      ref.name.should eq("refs/heads/unit_test")
+    end
+  end
+
+  describe "reflog" do
+    it "has?" do
+      repo = FixtureRepo.from_libgit2("testrepo")
+      ref = repo.references.create("refs/heads/test-reflog-default",
+        "a65fedf39aefe402d3bb6e24df4d4f5fe4547750")
+      ref.log?.should be_true
+    end
+
+    it "default" do
+      repo = FixtureRepo.from_libgit2("testrepo")
+      ref = repo.references.create("refs/heads/test-reflog-default",
+        "a65fedf39aefe402d3bb6e24df4d4f5fe4547750")
+      reflog = ref.log
+
+      reflog.size.should eq(1)
+
+      reflog[0].id_old.should eq(Git::Oid.new("0000000000000000000000000000000000000000"))
+      reflog[0].id_new.should eq(Git::Oid.new("a65fedf39aefe402d3bb6e24df4d4f5fe4547750"))
+      reflog[0].message.should be_nil
+      # FIXME need to implement config for repo to test it
+      # reflog[0].committer.name.should eq("")
+      # reflog[0].committer.email.should eq("")
+    end
+  end
 end
