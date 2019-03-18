@@ -158,6 +158,18 @@ module Git
       Commit.new(parent)
     end
 
+    def diff
+      self.tree.diff(parents.first.tree)
+    end
+
+    def diff(tree : Tree)
+      self.tree.diff(tree)
+    end
+
+    def diff(commit : Commit)
+      self.tree.diff(commit.tree)
+    end
+
     def to_s(io)
       io << sha
     end

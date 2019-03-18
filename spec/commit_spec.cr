@@ -162,6 +162,29 @@ describe Git::Commit do
     amended_commit.author.email.should eq(person.email)
   end
 
+  it "diff" do
+    obj = repo.lookup_commit("a4a7dce85cf63874e984719f4fdd239f5145052f")
+    d = obj.diff
+    d.should be_a(Git::Diff)
+    d.size.should eq(2)
+  end
+
+  it "diff commit" do
+    obj = repo.lookup_commit("a4a7dce85cf63874e984719f4fdd239f5145052f")
+    other = repo.lookup_commit("8496071c1b46c854b31185ea97743be6a8774479")
+    d = obj.diff(other)
+    d.should be_a(Git::Diff)
+    d.size.should eq(3)
+  end
+
+  it "diff tree" do
+    obj = repo.lookup_commit("a4a7dce85cf63874e984719f4fdd239f5145052f")
+    other = repo.lookup_commit("8496071c1b46c854b31185ea97743be6a8774479").tree
+    d = obj.diff(other)
+    d.should be_a(Git::Diff)
+    d.size.should eq(3)
+  end
+
   describe "write commit data" do
     source_repo = FixtureRepo.from_rugged("testrepo.git")
     write_repo = FixtureRepo.clone(source_repo)

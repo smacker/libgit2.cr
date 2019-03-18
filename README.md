@@ -61,7 +61,7 @@ TODO: Write usage instructions here
   - [x] `#amend`
   - [x] `#author`
   - [x] `#commiter`
-  - [ ] `#diff`
+  - [x] `#diff`
   - [ ] `#diff_workdir`
   - [x] `#epoch_time`
   - [ ] `#header`
