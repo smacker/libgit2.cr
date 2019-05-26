@@ -45,7 +45,7 @@ module Git
       when LibGit::OType::COMMIT
         Commit.new(obj.as(LibGit::Commit))
       when LibGit::OType::TAG
-        Tag.new(obj.as(LibGit::Tag))
+        Tag::Annotation.new(obj.as(LibGit::Tag))
       else
         raise "Invalid object type"
       end
