@@ -79,7 +79,7 @@ module Git
 
     def lookup_tag(oid : Oid)
       nerr(LibGit.tag_lookup(out tag, @value, oid.p))
-      Tag.new(tag)
+      Tag::Annotation.new(tag)
     end
 
     def lookup_tag(sha : String)

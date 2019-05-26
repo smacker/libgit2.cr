@@ -1,36 +1,42 @@
 require "./object"
 
 module Git
-  class Tag < Object
-    @value : LibGit::Tag
-
+  class Tag < Reference
     def name
-      String.new(LibGit.tag_name(@value))
+      canonical_name.lchop "refs/tags/"
     end
 
-    def message
-      String.new(LibGit.tag_message(@value))
-    end
+    class Annotation < C_Pointer
+      @value : LibGit::Tag
 
-    # def target
-    #   nerr(LibGit.tag_target(out target, @value))
-    #   Object.new(target)
-    # end
+      def name
+        String.new(LibGit.tag_name(@value))
+      end
 
-    def target_type
-      LibGit.tag_target_type(@value)
-    end
+      def message
+        String.new(LibGit.tag_message(@value))
+      end
 
-    def target_oid
-      Oid.new(LibGit.tag_target_id(@value).value)
-    end
+      # def target
+      #   nerr(LibGit.tag_target(out target, @value))
+      #   Object.new(target)
+      # end
 
-    def tagger
-      Signature.new(LibGit.tag_tagger(@value))
-    end
+      def target_type
+        LibGit.tag_target_type(@value)
+      end
 
-    def finalize
-      LibGit.tag_free(@value)
+      def target_oid
+        Oid.new(LibGit.tag_target_id(@value).value)
+      end
+
+      def tagger
+        Signature.new(LibGit.tag_tagger(@value))
+      end
+
+      def finalize
+        LibGit.tag_free(@value)
+      end
     end
   end
 
@@ -60,10 +66,10 @@ module Git
       if err == LibGit::ErrorCode::NotFound.value || err == LibGit::ErrorCode::InvalidSpec.value
         canonical_ref = "refs/tags/#{name}"
         nerr(LibGit.reference_lookup(out ref, @repo, canonical_ref))
-        Tag.new(ref.as(LibGit::Tag))
+        Tag.new(ref)
       else
         nerr(err)
-        Tag.new(tag.as(LibGit::Tag))
+        Tag.new(tag)
       end
     end
 
