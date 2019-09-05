@@ -31,7 +31,6 @@ module Git
 
   class RemoteCollection < NoError
     include Enumerable(Remote)
-    include Iterable(Remote)
 
     def initialize(@repo : Repo)
     end

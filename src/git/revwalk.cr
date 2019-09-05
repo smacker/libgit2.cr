@@ -2,7 +2,7 @@ module Git
   alias Sort = LibGit::Sort
 
   class RevWalk < C_Pointer
-    include Iterator(Commit)
+    include Enumerable(Commit)
 
     @value : LibGit::Revwalk
 

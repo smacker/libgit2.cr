@@ -20,7 +20,7 @@ describe Git::Remote do
   end
 
   it "shoud return push_url" do
-    repo.remotes["test_with_pushurl"].push_url.should eq("git://github.com/libgit2/pushlibgit2")
+    repo.remotes["test_with_pushurl"].push_url.should eq("git@github.com:libgit2/pushlibgit2")
     repo.remotes["joshaber"].push_url.should be_nil
   end
 

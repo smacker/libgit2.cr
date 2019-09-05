@@ -40,7 +40,7 @@ describe Git::Repo do
 
   it "should walking without block" do
     commits = repo.walk("a4a7dce85cf63874e984719f4fdd239f5145052f")
-    commits.should be_a(Iterator(Git::Commit))
+    commits.should be_a(Enumerable(Git::Commit))
     commits.size.should be > 0
   end
 

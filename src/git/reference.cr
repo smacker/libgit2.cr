@@ -124,7 +124,6 @@ module Git
   end
 
   class ReferenceCollection < NoError
-    include Enumerable(Reference)
     include Iterable(Reference)
 
     def initialize(@repo : Repo)
