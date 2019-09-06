@@ -15,7 +15,7 @@ module Git
   end
 
   class BranchCollection < NoError
-    include Enumerable(Branch)
+    include Iterable(Branch)
 
     def initialize(@repo : Repo)
     end
