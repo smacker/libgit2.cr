@@ -83,7 +83,7 @@ describe Git::Commit do
     tree_oid = builder.write
     tree = repo.lookup_tree(tree_oid)
 
-    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.utc)
 
     commit_params = Git::AmendData.new(
       message: "This is the amended commit message\n\nThis commit is created from Rugged",
@@ -106,7 +106,7 @@ describe Git::Commit do
   it "amend blank tree" do
     obj = repo.lookup_commit("8496071c1b46c854b31185ea97743be6a8774479")
 
-    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.utc)
     commit_params = Git::AmendData.new(
       message: "This is the amended commit message\n\nThis commit is created from Rugged",
       committer: person,
@@ -145,7 +145,7 @@ describe Git::Commit do
   it "amend blank amessage" do
     obj = repo.lookup_commit("8496071c1b46c854b31185ea97743be6a8774479")
 
-    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+    person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.utc)
     commit_params = Git::AmendData.new(
       committer: person,
       author: person,
@@ -195,7 +195,7 @@ describe Git::Commit do
 
     it "with time" do
       parent = write_repo.head.target.as(Git::Commit)
-      person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+      person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.utc)
       data = Git::CommitData.new(
         message = msg,
         parents = [parent],
@@ -233,7 +233,7 @@ describe Git::Commit do
       oid = Git::Commit.create(write_repo, data)
 
       commit = write_repo.lookup_commit(oid)
-      commit.committer.time.should be_close(Time.now, 1.seconds)
+      commit.committer.time.should be_close(Time.utc, 1.seconds)
     end
 
     pending "without signature" do
@@ -241,13 +241,13 @@ describe Git::Commit do
 
     it "empty email fails" do
       expect_raises(Git::Error) do
-        Git::Signature.new(name = "Scott", email = "", time = Time.now)
+        Git::Signature.new(name = "Scott", email = "", time = Time.utc)
       end
     end
 
     it "to string" do
       parent = write_repo.head.target.as(Git::Commit)
-      person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.now)
+      person = Git::Signature.new(name = "Scott", email = "schacon@gmail.com", time = Time.utc)
       data = Git::CommitData.new(
         message = msg,
         parents = [parent],
