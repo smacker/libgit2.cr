@@ -207,6 +207,7 @@ TODO: Write usage instructions here
   - [x] `#ref_names`
   - [x] `#tags`
   - [x] `#walk`
+  - [x] `#attributes`
   - [ ] lots of other methods
 - [ ] Settings
 - [ ] Submodule

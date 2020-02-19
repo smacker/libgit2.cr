@@ -28,7 +28,7 @@ lib LibGit
   # fun repository_head_unborn = git_repository_head_unborn(repo : Repository) : LibC::Int
   # fun repository_is_empty = git_repository_is_empty(repo : Repository) : LibC::Int
   # fun repository_path = git_repository_path(repo : Repository) : LibC::Char*
-  # fun repository_workdir = git_repository_workdir(repo : Repository) : LibC::Char*
+  fun repository_workdir = git_repository_workdir(repo : Repository) : LibC::Char*
   # fun repository_set_workdir = git_repository_set_workdir(repo : Repository, workdir : LibC::Char*, update_gitlink : LibC::Int) : LibC::Int
   fun repository_is_bare = git_repository_is_bare(repo : Repository) : LibC::Int
   # fun repository_config = git_repository_config(out : X_Config*, repo : Repository) : LibC::Int

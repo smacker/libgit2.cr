@@ -31,7 +31,16 @@ module Git
     end
 
     # path
-    # workdir
+
+    def workdir
+      wd = LibGit.repository_workdir(@value)
+      if wd.null?
+        raise "error"
+      else
+        String.new(wd)
+      end
+    end
+
     # workdir=
 
     def bare? : Bool
@@ -153,6 +162,18 @@ module Git
     end
 
     def blame
+    end
+
+    def attributes(path : String)
+      res = Hash(String, String).new
+      callback = ->(name : LibC::Char*, value : LibC::Char*, payload : Void*) {
+        payload_res = Box(typeof(res)).unbox(payload)
+        payload_res[String.new(name)] = String.new(value)
+        0
+      }
+      boxed_data = Box.box(res)
+      nerr(LibGit.attr_foreach(@value, 0, path, callback, boxed_data))
+      res
     end
 
     def finalize

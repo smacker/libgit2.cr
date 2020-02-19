@@ -79,4 +79,25 @@ describe Git::Repo do
     remotes = repo.remotes
     remotes.size.should eq(5)
   end
+
+  it "should return workdir" do
+    repo = FixtureRepo.from_libgit2("testrepo")
+    repo.workdir.should eq("/private/tmp/rugged-libgit2-testrepo/")
+  end
+
+  it "should return attributes" do
+    attributes = "
+*.txt linguist-lang=text
+new.txt other-attr=this
+README is_readme
+"
+
+    repo = FixtureRepo.from_libgit2("testrepo")
+    # repo.checkout_tree("refs/heads/dir")
+    File.write(File.join(repo.workdir, ".gitattributes"), attributes)
+
+    attrs = repo.attributes("new.txt")
+    attrs["linguist-lang"].should eq("text")
+    attrs["other-attr"].should eq("this")
+  end
 end
