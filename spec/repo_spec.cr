@@ -82,7 +82,7 @@ describe Git::Repo do
 
   it "should return workdir" do
     repo = FixtureRepo.from_libgit2("testrepo")
-    repo.workdir.should eq("/private/tmp/rugged-libgit2-testrepo/")
+    repo.workdir.should contain("rugged-libgit2-testrepo/")
   end
 
   it "should return attributes" do

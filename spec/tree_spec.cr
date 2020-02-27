@@ -1,11 +1,17 @@
 require "./spec_helper"
 
-describe Git::Tree do
-  repo = FixtureRepo.from_rugged("testrepo.git")
-  oid = "c4dc1555e4d4fa0e0c9c3fc46734c7c35b3ce90b"
-  tree = repo.lookup_tree(oid)
+module TreeHelpers
+  def self.get
+    repo = FixtureRepo.from_rugged("testrepo.git")
+    oid = "c4dc1555e4d4fa0e0c9c3fc46734c7c35b3ce90b"
+    tree = repo.lookup_tree(oid)
+  end
+end
 
+describe Git::Tree do
   it "read tree data" do
+    tree = TreeHelpers.get
+
     tree.size.should eq(3)
     tree.size_recursive.should eq(6)
     # tree.size_recursive(5).should eq(5)
@@ -16,6 +22,8 @@ describe Git::Tree do
   end
 
   it "read tree entry data" do
+    tree = TreeHelpers.get
+
     bent = tree[0]
     tent = tree[2]
 
@@ -29,17 +37,23 @@ describe Git::Tree do
   end
 
   it "get entry by oid" do
+    tree = TreeHelpers.get
+
     bent = tree.get_entry(Git::Oid.new("1385f264afb75a56a5bec74243be9b367ba4ca08"))
     bent.name.should eq("README")
     bent.type.should eq(Git::OType::BLOB)
   end
 
   it "get entry by oid returns nil if no oid" do
+    tree = TreeHelpers.get
+
     nada = tree.get_entry?(Git::Oid.new("1385f264afb75a56a5bec74243be9b367ba4ca07"))
     nada.should be_nil
   end
 
   it "tree iteration" do
+    tree = TreeHelpers.get
+
     tree.should be_a(Enumerable(Git::TreeEntry))
 
     enum_test = tree.to_a.sort { |a, b| a.oid <=> b.oid }.map { |e| e.name }.join(':')
@@ -47,24 +61,32 @@ describe Git::Tree do
   end
 
   it "tree walk only trees" do
+    tree = TreeHelpers.get
+
     tree.walk_trees do |root, entry|
       entry.type.should eq(Git::OType::TREE)
     end
   end
 
   it "tree walk only blobs" do
+    tree = TreeHelpers.get
+
     tree.walk_blobs do |root, entry|
       entry.type.should eq(Git::OType::BLOB)
     end
   end
 
   it "iterate subtrees" do
+    tree = TreeHelpers.get
+
     tree.each_tree do |tree|
       tree.type.should eq(Git::OType::TREE)
     end
   end
 
   it "iterate subtree blobs" do
+    tree = TreeHelpers.get
+
     tree.each_blob do |tree|
       tree.type.should eq(Git::OType::BLOB)
     end

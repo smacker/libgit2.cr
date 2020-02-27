@@ -38,11 +38,11 @@ module FixtureRepo
   end
 
   def self.mktmpdir(name)
-    FileUtils.rm_rf("/tmp/#{name}/")
-    "/tmp/#{name}/"
+    File.tempname("-#{name}")
   end
 
   def self.ensure_cleanup(path)
+    Spec.after_suite { FileUtils.rm_rf(path) }
   end
 
   def self.prepare(path)

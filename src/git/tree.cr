@@ -47,7 +47,7 @@ module Git
         end
         return 0
       }
-      LibGit.tree_walk(@value, TreewalkMode::TreewalkPre, treecount_cb, box_count)
+      nerr(LibGit.tree_walk(@value, TreewalkMode::TreewalkPre, treecount_cb, box_count))
 
       count
     end
