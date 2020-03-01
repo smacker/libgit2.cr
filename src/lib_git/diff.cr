@@ -27,8 +27,8 @@ lib LibGit
 
   enum DeltaT
     Unmodified =  0
-    Added      =  1
-    Deleted    =  2
+    Deleted    =  1
+    Added      =  2
     Modified   =  3
     Renamed    =  4
     Copied     =  5
