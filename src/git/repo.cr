@@ -14,9 +14,14 @@ module Git
     end
 
     # bare
-    # init_at
     # discover
     # clone_at
+    
+    def self.init_at(path, is_bare = false)
+      path = File.expand_path(path)
+      LibGit.repository_init(out repo, path, is_bare ? 1 : 0)
+      new(repo, path)
+    end
 
     def exists?(oid : Oid)
       nerr(LibGit.repository_odb(out odb, @value))
@@ -47,8 +52,13 @@ module Git
       LibGit.repository_is_bare(@value) == 1
     end
 
-    # shallow?
-    # empty?
+    def shallow? : Bool
+      LibGit.repository_is_shallow(@value) == 1
+    end
+    
+    def empty? : Bool
+      LibGit.repository_is_empty(@value) == 1
+    end
 
     # head_detached?
     # head_unborn?
