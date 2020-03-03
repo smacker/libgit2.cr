@@ -115,4 +115,23 @@ describe Git::Diff do
     lines.select(&.addition?).size.should eq(0)
     lines.select(&.deletion?).size.should eq(113)
   end
+  
+  it "patch and to_s" do
+    repo = FixtureRepo.from_libgit2("attr")
+    a = Git::Commit.lookup(repo, "605812a").tree
+    b = Git::Commit.lookup(repo, "370fe9ec22").tree
+    c = Git::Commit.lookup(repo, "f5b0af1fb4f5c").tree
+    
+    diff = a.diff(b)
+    
+    deltas = diff.deltas
+    
+    patches = diff.patches
+    
+    deltas = patches.map { |p| p.delta }
+    
+    deltas.size.should eq(2)
+    
+    patch = patches.first
+    patch.to_s.should eq("")
 end
