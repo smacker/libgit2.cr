@@ -134,4 +134,5 @@ describe Git::Diff do
     
     patch = patches.first
     patch.to_s.should eq("")
+  end
 end
