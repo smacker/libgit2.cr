@@ -261,6 +261,16 @@ module Git
         yield DiffHunk.new(hunk, @value, i, lines)
       end
     end
+    
+    def delta
+      DiffDelta.new(LibGit.patch_get_delta(@value))
+    end
+
+    def to_s
+      buf = LibGit::Buf.new
+      nerr(LibGit.patch_to_buf(pointerof(buf), @value))
+      String.new(buf.ptr)
+    end
 
     def finalize
       LibGit.patch_free(@value)
