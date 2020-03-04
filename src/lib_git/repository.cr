@@ -26,7 +26,7 @@ lib LibGit
   fun repository_head = git_repository_head(out : Reference*, repo : Repository) : LibC::Int
   # fun repository_head_detached = git_repository_head_detached(repo : Repository) : LibC::Int
   # fun repository_head_unborn = git_repository_head_unborn(repo : Repository) : LibC::Int
-  # fun repository_is_empty = git_repository_is_empty(repo : Repository) : LibC::Int
+  fun repository_is_empty = git_repository_is_empty(repo : Repository) : LibC::Int
   # fun repository_path = git_repository_path(repo : Repository) : LibC::Char*
   fun repository_workdir = git_repository_workdir(repo : Repository) : LibC::Char*
   # fun repository_set_workdir = git_repository_set_workdir(repo : Repository, workdir : LibC::Char*, update_gitlink : LibC::Int) : LibC::Int
@@ -49,7 +49,7 @@ lib LibGit
   # fun repository_state = git_repository_state(repo : Repository) : LibC::Int
   # fun repository_set_namespace = git_repository_set_namespace(repo : Repository, nmspace : LibC::Char*) : LibC::Int
   # fun repository_get_namespace = git_repository_get_namespace(repo : Repository) : LibC::Char*
-  # fun repository_is_shallow = git_repository_is_shallow(repo : Repository) : LibC::Int
+  fun repository_is_shallow = git_repository_is_shallow(repo : Repository) : LibC::Int
   # fun repository_ident = git_repository_ident(name : LibC::Char**, email : LibC::Char**, repo : Repository) : LibC::Int
   # fun repository_set_ident = git_repository_set_ident(repo : Repository, name : LibC::Char*, email : LibC::Char*) : LibC::Int
 end
