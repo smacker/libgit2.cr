@@ -27,6 +27,12 @@ module Git
     end
 
     def each(b_type : BranchType = BranchType::All)
+      BranchIterator.new(@repo, b_type).each do |branch|
+        yield(branch)
+      end
+    end
+
+    def each(b_type : BranchType = BranchType::All)
       BranchIterator.new(@repo, b_type)
     end
 

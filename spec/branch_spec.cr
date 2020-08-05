@@ -17,6 +17,14 @@ describe Git::Branch do
     repo.branches.each_name(Git::BranchType::Local).to_a.sort.should eq(["master"])
   end
 
+  it "each accept a block" do
+    branches = [] of Git::Branch
+    repo.branches.each(:local) do |branch|
+      branches << branch
+    end
+    branches.map(&.name).should eq(%w(master))
+  end
+
   it "lookup with ambiguous names" do
     commit = repo.lookup_commit("41bc8c69075bbdb46c5c6f0566cc8cc5b46e8bd9")
     repo.branches.create("origin/master", commit)
