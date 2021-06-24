@@ -1,0 +1,64 @@
+name: Crystal Spec
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download source
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+
+      - name: Install libgit
+        run: |
+           git submodule init
+           git submodule update
+           sudo apt-get install -y libgit2-dev
+      - name: Run tests
+        run: crystal spec
+        #run: crystal spec --order=random
+
+      - name: Examples
+        run: crystal run examples/log.cr -- .
+
+  in-docker:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal
+
+    steps:
+      - name: Install git and libgit
+        run: |
+          apt-get update
+          apt-get install -y git
+          apt-get install -y libgit2-dev
+          apt-get install -y libgit2-dev
+
+      - name: Check out source code
+        run: |
+          git clone https://github.com/smacker/libgit2.cr.git
+
+      - name: Install submodules for testing
+        run: |
+          cd libgit2.cr
+          git submodule init
+          git submodule update
+
+      - name: Run tests
+        run: |
+          cd libgit2.cr
+          crystal spec
+          #crystal spec --order=random
+
+      - name: Examples
+        run: |
+          cd libgit2.cr
+          crystal run examples/log.cr -- .
+

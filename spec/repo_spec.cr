@@ -62,12 +62,44 @@ describe Git::Repo do
 
   it "should return all ref names" do
     refs = repo.ref_names
-    refs.size.should eq(21)
+    ref_names = refs.to_a
+    ref_names.should eq([
+      "refs/heads/br2",
+      "refs/heads/cannot-fetch",
+      "refs/heads/chomped",
+      "refs/heads/haacked",
+      "refs/heads/master",
+      "refs/heads/not-good",
+      "refs/heads/packed-test",
+      "refs/heads/subtrees",
+      "refs/heads/test",
+      "refs/heads/track-local",
+      "refs/heads/trailing",
+      "refs/notes/fanout",
+      "refs/remotes/test/master",
+      "refs/tags/annotated_tag_to_blob",
+      "refs/tags/e90810b",
+      "refs/tags/hard_tag",
+      "refs/tags/point_to_blob",
+      "refs/tags/taggerless",
+      "refs/tags/test",
+      "refs/tags/wrapped_tag",
+      "refs/heads/packed",
+    ])
   end
 
   it "should return all tags" do
     tags = repo.tags
-    tags.size.should eq(7)
+    tag_names = tags.map {|tag| tag.name}
+    tag_names.should eq([
+      "annotated_tag_to_blob",
+      "e90810b",
+      "hard_tag",
+      "point_to_blob",
+      "taggerless",
+      "test",
+      "wrapped_tag"
+    ])
   end
 
   it "should return matching tags" do
