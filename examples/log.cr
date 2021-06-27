@@ -5,7 +5,7 @@ repo_path = ""
 show_log_size = false
 sorting = Git::Sort::Time
 
-OptionParser.parse! do |parser|
+OptionParser.parse do |parser|
   parser.banner = "Usage: log repo_path"
   parser.unknown_args do |p|
     if p.size != 1
