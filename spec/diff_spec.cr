@@ -130,9 +130,9 @@ describe Git::Diff do
     
     deltas = patches.map { |p| p.delta }
     
-    deltas.size.should eq(2)
+    deltas.size.should eq(5)
     
     patch = patches.first
-    patch.to_s.should eq("")
+    patch.to_s.should contain("diff --git a/.gitattributes b/.gitattributes")
   end
 end
