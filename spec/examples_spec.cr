@@ -8,10 +8,10 @@ def capture(cmd, params)
     stdout = IO::Memory.new
     stderr = IO::Memory.new
     res = Process.new(cmd, params, output: stdout, error: stderr).wait
-  
+
     return stdout.to_s, stderr.to_s, res.exit_status / 256
   end
-  
+
 describe "examples" do
   it "log.cr" do
     output, error, exit_code = capture(crystal, ["examples/log.cr"])
@@ -58,6 +58,16 @@ Date:   2018-10-15 13:50:52 UTC
 
 basic implementation
 END
+    error.should eq ""
+    exit_code.should eq(0)
+  end
+
+  it "from_sha_to_commit.cr" do
+    output, error, exit_code = capture(crystal, ["examples/from_sha_to_commit.cr", ".", "1d42ffdcf6f885a49ece5b2baac00a5146d0a556"])
+    output.should contain("sha: 1d42ffdcf6f885a49ece5b2baac00a5146d0a556")
+    output.should contain("message: Repo additions (#9)")
+    output.should contain("unix: 1583299684")
+    output.should contain("epoch: 1583299684")
     error.should eq ""
     exit_code.should eq(0)
   end
