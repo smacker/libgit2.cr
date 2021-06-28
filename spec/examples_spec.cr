@@ -68,6 +68,10 @@ END
     output.should contain("message: Repo additions (#9)")
     output.should contain("unix: 1583299684")
     output.should contain("epoch: 1583299684")
+    output.should contain("committer.name: GitHub")
+    output.should contain("committer.epuch_time: 1583299684")
+    output.should contain("committer.email: noreply@github.com")
+
     error.should eq ""
     exit_code.should eq(0)
   end

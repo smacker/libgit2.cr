@@ -17,3 +17,8 @@ puts "message: #{commit.message}"
 puts "unix: #{commit.time.to_unix}"
 puts "epoch: #{commit.epoch_time}"
 
+committer = commit.committer
+puts "committer.name: #{committer.name}"
+puts "committer.epuch_time: #{committer.epoch_time}"
+puts "committer.email: #{committer.email}"
+
