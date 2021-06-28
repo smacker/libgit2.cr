@@ -120,7 +120,7 @@ describe Git::Diff do
     repo = FixtureRepo.from_libgit2("attr")
     a = Git::Commit.lookup(repo, "605812a").tree
     b = Git::Commit.lookup(repo, "370fe9ec22").tree
-    c = Git::Commit.lookup(repo, "f5b0af1fb4f5c").tree
+    #c = Git::Commit.lookup(repo, "f5b0af1fb4f5c").tree
     
     diff = a.diff(b)
     
