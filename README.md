@@ -260,10 +260,12 @@ TODO: Write development instructions here
 ## Contributing
 
 1. Fork it (<https://github.com/smacker/libgit2/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+2. Pull the repositories needed for the tests `git submodule init && git submodule update`
+3. Create your feature branch (`git checkout -b my-new-feature`)
+4. Test the code `crystal spec`
+5. Commit your changes (`git commit -am 'Add some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create a new Pull Request
 
 ## Contributors
 
